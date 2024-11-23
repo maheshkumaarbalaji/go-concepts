@@ -1,198 +1,79 @@
 package sorting
 
 import (
-	"testing"
 	"math/rand/v2"
+	"strings"
+	"testing"
 )
 
-func Test_BubbleSort_Asc(t *testing.T) {
+func GenerateNumberList(t testing.TB) []int {
+	t.Helper()
 	NumberList := make([]int, 0)
 	N := rand.IntN(100)
-	t.Logf("NumberList to be generated will have %d numbers.", N)
+	t.Logf("Number list to be generated will have %d numbers.", N)
 	for i := 1; i <= N; i++ {
 		randomNumber := rand.IntN(100)
 		NumberList = append(NumberList, randomNumber)
 	}
 
-	err := BubbleSort(NumberList, 0)
-	if err != nil {
-		t.Fatalf("Bubble Sort - Ascending Order :: Sorting process failed with message: %s", err.Error())
-		return
-	}
-
-	isSorted := true
-	errIndex := -1
-	for index := 1; index < N; index++ {
-		if NumberList[index] < NumberList[index - 1] {
-			isSorted = false
-			errIndex = index
-			break
-		}
-	}
-
-	if !isSorted {
-		t.Fatalf("Bubble Sort - Ascending Order :: Sorting process failed - Number at index %d not sorted", errIndex)
-	} else {
-		t.Log("Bubble Sort - Ascending Order :: Sorting process successfull")
-	}
+	return NumberList
 }
 
-func Test_BubbleSort_Desc(t *testing.T) {
-	NumberList := make([]int, 0)
-	N := rand.IntN(100)
-	t.Logf("NumberList to be generated will have %d numbers.", N)
-	for i := 1; i <= N; i++ {
-		randomNumber := rand.IntN(100)
-		NumberList = append(NumberList, randomNumber)
-	}
-
-	err := BubbleSort(NumberList, 1)
-	if err != nil {
-		t.Fatalf("Bubble Sort - Descending Order :: Sorting process failed with message: %s", err.Error())
-		return
-	}
-
+func IsSorted(t testing.TB, NumberList []int, SortOrder int) (bool, int) {
+	t.Helper()
 	isSorted := true
 	errIndex := -1
+	N := len(NumberList)
 	for index := 1; index < N; index++ {
-		if NumberList[index] > NumberList[index - 1] {
+		if (SortOrder == 0 && NumberList[index] < NumberList[index - 1]) || (SortOrder == 1 && NumberList[index] > NumberList[index - 1]) {
 			isSorted = false
 			errIndex = index
 			break
 		}
 	}
 
-	if !isSorted {
-		t.Fatalf("Bubble Sort - Descending Order :: Sorting process failed - Number at index %d not sorted", errIndex)
-	} else {
-		t.Log("Bubble Sort - Descending Order :: Sorting process successfull")
-	}
+	return isSorted, errIndex
 }
 
-func Test_InsertionSort_Asc(t *testing.T) {
-	NumberList := make([]int, 0)
-	N := rand.IntN(100)
-	t.Logf("NumberList to be generated will have %d numbers.", N)
-	for i := 1; i <= N; i++ {
-		randomNumber := rand.IntN(100)
-		NumberList = append(NumberList, randomNumber)
+func Test_Sorting(t *testing.T) {
+	testCases := []struct {
+		Name string
+		SortingType string
+		SortOrder int
+	} {
+		{ "Bubble Sort - Ascending Order", "bubble", 0 },
+		{ "Bubble Sort - Descending Order", "bubble", 1 },
+		{ "Insertion Sort - Ascending Order", "insertion", 0 },
+		{ "Insertion Sort - Descending Order", "insertion", 1 },
+		{ "Selection Sort - Ascending Order", "selection", 0 },
+		{ "Selection Sort - Descending Order", "selection", 1 },
 	}
 
-	err := InsertionSort(NumberList, 0)
-	if err != nil {
-		t.Fatalf("Insertion Sort - Ascending Order :: Sorting process failed with message: %s", err.Error())
-		return
-	}
+	for _, testCase := range testCases {
+		t.Run(testCase.Name, func(tt *testing.T) {
+			NumberList := GenerateNumberList(tt)
+			tt.Log("Number list generated for testing: ", NumberList)
+			var err error
+			if strings.EqualFold(testCase.SortingType, "bubble") {
+				err = BubbleSort(NumberList, testCase.SortOrder)
+			} else if strings.EqualFold(testCase.SortingType, "insertion") {
+				err = InsertionSort(NumberList, testCase.SortOrder)
+			} else if strings.EqualFold(testCase.SortingType, "selection") {
+				err = SelectionSort(NumberList, testCase.SortOrder)
+			}
 
-	isSorted := true
-	errIndex := -1
-	for index := 1; index < N; index++ {
-		if NumberList[index] < NumberList[index - 1] {
-			isSorted = false
-			errIndex = index
-			break
-		}
-	}
+			if err != nil {
+				tt.Fatalf("%s :: Ascending Order :: Sorting process failed with message: %s", testCase.Name, err.Error())
+				return
+			}
 
-	if !isSorted {
-		t.Fatalf("Insertion Sort - Ascending Order :: Sorting process failed - Number at index %d not sorted", errIndex)
-	} else {
-		t.Log("Insertion Sort - Ascending Order :: Sorting process successfull")
-	}
-}
-
-func Test_InsertionSort_Desc(t *testing.T) {
-	NumberList := make([]int, 0)
-	N := rand.IntN(100)
-	t.Logf("NumberList to be generated will have %d numbers.", N)
-	for i := 1; i <= N; i++ {
-		randomNumber := rand.IntN(100)
-		NumberList = append(NumberList, randomNumber)
-	}
-
-	err := InsertionSort(NumberList, 1)
-	if err != nil {
-		t.Fatalf("Insertion Sort - Descending Order :: Sorting process failed with message: %s", err.Error())
-		return
-	}
-
-	isSorted := true
-	errIndex := -1
-	for index := 1; index < N; index++ {
-		if NumberList[index] > NumberList[index - 1] {
-			isSorted = false
-			errIndex = index
-			break
-		}
-	}
-
-	if !isSorted {
-		t.Fatalf("Insertion Sort - Descending Order :: Sorting process failed - Number at index %d not sorted", errIndex)
-	} else {
-		t.Log("Insertion Sort - Descending Order :: Sorting process successfull")
-	}
-}
-
-func Test_SelectionSort_Asc(t *testing.T) {
-	NumberList := make([]int, 0)
-	N := rand.IntN(100)
-	t.Logf("NumberList to be generated will have %d numbers.", N)
-	for i := 1; i <= N; i++ {
-		randomNumber := rand.IntN(100)
-		NumberList = append(NumberList, randomNumber)
-	}
-
-	err := SelectionSort(NumberList, 0)
-	if err != nil {
-		t.Fatalf("Selection Sort - Ascending Order :: Sorting process failed with message: %s", err.Error())
-		return
-	}
-
-	isSorted := true
-	errIndex := -1
-	for index := 1; index < N; index++ {
-		if NumberList[index] < NumberList[index - 1] {
-			isSorted = false
-			errIndex = index
-			break
-		}
-	}
-
-	if !isSorted {
-		t.Fatalf("Selection Sort - Ascending Order :: Sorting process failed - Number at index %d not sorted", errIndex)
-	} else {
-		t.Log("Selection Sort - Ascending Order :: Sorting process successfull")
-	}
-}
-
-func Test_SelectionSort_Desc(t *testing.T) {
-	NumberList := make([]int, 0)
-	N := rand.IntN(100)
-	t.Logf("NumberList to be generated will have %d numbers.", N)
-	for i := 1; i <= N; i++ {
-		randomNumber := rand.IntN(100)
-		NumberList = append(NumberList, randomNumber)
-	}
-
-	err := SelectionSort(NumberList, 1)
-	if err != nil {
-		t.Fatalf("Selection Sort - Descending Order :: Sorting process failed with message: %s", err.Error())
-		return
-	}
-
-	isSorted := true
-	errIndex := -1
-	for index := 1; index < N; index++ {
-		if NumberList[index] > NumberList[index - 1] {
-			isSorted = false
-			errIndex = index
-			break
-		}
-	}
-
-	if !isSorted {
-		t.Fatalf("Selection Sort - Descending Order :: Sorting process failed - Number at index %d not sorted", errIndex)
-	} else {
-		t.Log("Selection Sort - Descending Order :: Sorting process successfull")
+			tt.Log("Number list after sorting: ", NumberList)
+			isSorted, errIndex := IsSorted(tt, NumberList, testCase.SortOrder)
+			if !isSorted {
+				tt.Fatalf("%s :: Sorting process failed - Number at index %d not sorted", testCase.Name, errIndex)
+			} else {
+				tt.Logf("%s :: Sorting process successfull", testCase.Name)
+			}
+		})
 	}
 }
