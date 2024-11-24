@@ -4,8 +4,12 @@ import (
 	"github.com/maheshkumaarbalaji/goconcepts/lib/sorting"
 )
 
+type SortType interface {
+	int | float32 | float64
+}
+
 // Uses Linear Search algorithm to determine the index of the first occurrence of the search element in the given number slice.
-func LinearSearch(NumberList []int, SearchNum int) int {
+func LinearSearch[T SortType](NumberList []T, SearchNum T) int {
 	TargetElemPos := -1
 
 	for i, elem := range NumberList {
@@ -19,7 +23,7 @@ func LinearSearch(NumberList []int, SearchNum int) int {
 }
 
 // Uses Binary Search algorithm to determine the index of the first occurrence of the search element in the given number slice.
-func BinarySearch(NumberList []int, SearchNum int) int {
+func BinarySearch[T SortType](NumberList []T, SearchNum T) int {
 	TargetElemPos := -1
 	l, n := 0, len(NumberList) - 1
 	err := sorting.BubbleSort(NumberList, 0)
