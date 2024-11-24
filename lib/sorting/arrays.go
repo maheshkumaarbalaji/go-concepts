@@ -4,10 +4,14 @@ import (
 	"errors"
 )
 
+type SortType interface {
+	int | float32 | float64
+}
+
 // Performs bubble sort algorithm on the given number slice to sort the numbers as per the given sort order.
 // Sort Order value of 0 implies ascending order.
 // Sort Order value of 1 implies descending order.
-func BubbleSort(NumberList []int, SortOrder int) error {
+func BubbleSort[T SortType](NumberList []T, SortOrder int) error {
 
 	if SortOrder != 0 && SortOrder != 1 {
 		return errors.New("sort order should either be 0 or 1")
@@ -30,7 +34,7 @@ func BubbleSort(NumberList []int, SortOrder int) error {
 // Performs insertion sort algorithm on the given number slice to sort the numbers as per the given sort order.
 // Sort Order value of 0 implies ascending order.
 // Sort Order value of 1 implies descending order.
-func InsertionSort(NumberList []int, SortOrder int) error {
+func InsertionSort[T SortType](NumberList []T, SortOrder int) error {
 
 	if SortOrder != 0 && SortOrder != 1 {
 		return errors.New("sort order should either be 0 or 1")
@@ -59,7 +63,7 @@ func InsertionSort(NumberList []int, SortOrder int) error {
 // Performs selection sort algorithm on the given number slice to sort the numbers as per the given sort order.
 // Sort Order value of 0 implies ascending order.
 // Sort Order value of 1 implies descending order.
-func SelectionSort(NumberList []int, SortOrder int) error {
+func SelectionSort[T SortType](NumberList []T, SortOrder int) error {
 
 	if SortOrder != 0 && SortOrder != 1 {
 		return errors.New("sort order should either be 0 or 1")

@@ -24,8 +24,8 @@ func Test_Search(t *testing.T) {
 		Name string
 		SearchType string
 	} {
-		{ "Test_LinearSearch", "linear" },
-		{ "Test_BinarySearch", "binary" },
+		{ "Linear Search", "linear" },
+		{ "Binary Search", "binary" },
 	}
 
 	for _, testCase := range testCases {
