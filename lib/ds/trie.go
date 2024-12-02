@@ -12,7 +12,7 @@ type RouteNode struct {
 
 func CreateRouteNode(routePart string) *RouteNode {
 	newNode := new(RouteNode)
-	newNode.RoutePart = routePart
+	newNode.RoutePart = strings.TrimSpace(routePart)
 	newNode.Children = make([]*RouteNode, 0)
 	return newNode
 }
@@ -97,8 +97,5 @@ func AddRouteToTree(root *RouteNode, RoutePath string) {
 }
 
 func CreateTree() *RouteNode {
-	root := new(RouteNode)
-	root.RoutePart = ""
-	root.Children = make([]*RouteNode, 0)
-	return root
+	return CreateRouteNode("")
 }
